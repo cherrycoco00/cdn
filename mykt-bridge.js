@@ -85,11 +85,11 @@ function isVersionAtLeast(currentVersion, minimumVersion){
  * @param event 클릭 이벤트
  * @returns {boolean}
  */
-function onClickOpenNewWindow(event){
+function callToOpenNewWindowBridgeByDom(event){
   const dom = event && event.target;
 
   if (!isAnchorElementWithHref(dom)) {
-    console.log('onClickOpenNewWindow : 클릭된 요소가 a 태그가 아니거나 href가 없습니다. 브릿지 호출을 건너뜁니다.');
+    console.log('callToOpenNewWindowBridgeByDom : 클릭된 요소가 a 태그가 아니거나 href가 없습니다. 브릿지 호출을 건너뜁니다.');
     return true;
   }
 
@@ -97,16 +97,20 @@ function onClickOpenNewWindow(event){
   const isSupportedVersion = isVersionAtLeast(appVersion, { major: 9, minor: 0, patch: 4 });
 
   if (!isSupportedVersion) {
-    console.log('onClickOpenNewWindow : 앱 버전이 9.0.4 이상이 아닙니다. 브릿지 호출을 건너뜁니다.');
+    console.log('callToOpenNewWindowBridgeByDom : 앱 버전이 9.0.4 이상이 아닙니다. 브릿지 호출을 건너뜁니다.');
     return true;
   }
 
-  console.log('onClickOpenNewWindow : 앱 버전이 9.0.4 이상입니다. 브릿지 호출을 진행합니다.');
+  console.log('callToOpenNewWindowBridgeByDom : 앱 버전이 9.0.4 이상입니다. 브릿지 호출을 진행합니다.');
   if (event && typeof event.preventDefault === 'function') {
     event.preventDefault();
   }
 
-  openNewWindow(dom.getAttribute('href'));
+  let url = dom.getAttribute('href');
+  if(url.startsWith('/')) {
+    url = window.location.origin + url;
+  }
+  openNewWindow(url);
   return false;
 };
 
