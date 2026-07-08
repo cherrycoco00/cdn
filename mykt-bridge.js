@@ -116,7 +116,7 @@ function callToOpenNewWindowBridgeByDom(event){
 
 /**
  * callToOpenNewWindowBridge 는 fnGoProductView와 같은 함수에서 브릿지 호출 위해 사용되는 함수
- * 삽입되어야 하는 함수명들: chatBotTalk (window.open), talkChatAction, fnGoProductView, startKakaoTalkClick, submitLink
+ * 삽입되어야 하는 함수명들: chatBotTalk (window.open), talkChatAction(window.open), startKakaoTalkClick (window.open), submitLink(window.open), fnGoProductView
  * @param {string} url
  * @param {function} callback, 9.0.4 미만에서 브릿지 호출 안 할 때 callback 있으면 callback 호출하고 없으면 href 이동
  * @returns {boolean}
