@@ -3,7 +3,7 @@
  * @param userAgent User-Agent 문자열
  * @returns AppVersion
  */
-function getAppVersion(userAgent){
+function getMyKTAppVersion(userAgent){
   const match = userAgent.match(/appver=([^;]+);/);
   const version = (match?.[1] || '0.0.0').split('.').map(Number);
 
@@ -18,9 +18,9 @@ function getAppVersion(userAgent){
  * 웹뷰 브릿지로 새 창을 연다.
  * @param targetUrl 이동할 URL 문자열
  */
-function openNewWindow(targetUrl){
+function myKTopenNewWindow(targetUrl){
   if (typeof targetUrl !== 'string' || targetUrl.trim() === '') {
-    console.warn('[mykt-bridge] openNewWindow: 유효한 targetUrl 문자열이 필요합니다.');
+    console.warn('[mykt-bridge] myKTopenNewWindow: 유효한 targetUrl 문자열이 필요합니다.');
     return;
   }
 
@@ -93,7 +93,7 @@ function callToOpenNewWindowBridgeByDom(event){
     return true;
   }
 
-  const appVersion = getAppVersion(window.navigator.userAgent || '');
+  const appVersion = getMyKTAppVersion(window.navigator.userAgent || '');
   const isSupportedVersion = isVersionAtLeast(appVersion, { major: 9, minor: 0, patch: 4 });
 
   if (!isSupportedVersion) {
@@ -110,7 +110,7 @@ function callToOpenNewWindowBridgeByDom(event){
   if(url.startsWith('/')) {
     url = window.location.origin + url;
   }
-  openNewWindow(url);
+  myKTopenNewWindow(url);
   return false;
 };
 
@@ -122,7 +122,7 @@ function callToOpenNewWindowBridgeByDom(event){
  * @returns {boolean}
  */
 function callToOpenNewWindowBridge(url, callback){
-   const appVersion = getAppVersion(window.navigator.userAgent || '');
+   const appVersion = getMyKTAppVersion(window.navigator.userAgent || '');
   const isSupportedVersion = isVersionAtLeast(appVersion, { major: 9, minor: 0, patch: 4 });
   if (!isSupportedVersion) {
     console.log('callToOpenNewWindowBridge : 앱 버전이 9.0.4 이상이 아닙니다. 브릿지 호출을 건너뜁니다.');
@@ -135,6 +135,6 @@ function callToOpenNewWindowBridge(url, callback){
   }
 
   console.log('callToOpenNewWindowBridge : 앱 버전이 9.0.4 이상입니다. 브릿지 호출을 진행합니다.');
-  openNewWindow(url);
+  myKTopenNewWindow(url);
   return false;
 }
