@@ -135,6 +135,6 @@ function callToOpenNewWindowBridge(url, callback){
   }
 
   console.log('callToOpenNewWindowBridge : 앱 버전이 9.0.4 이상입니다. 브릿지 호출을 진행합니다.');
-  myKTopenNewWindow(url);
+  myKTopenNewWindow(url.startsWith('/') ? window.location.origin + url : url);
   return false;
 }
