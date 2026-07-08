@@ -52,7 +52,7 @@ function isAnchorElementWithHref(dom){
   }
 
   const href = dom.getAttribute('href');
-  return dom.tagName.toUpperCase() === 'A' && typeof href === 'string' && href.trim() !== '';
+  return dom.tagName.toUpperCase() === 'A' && typeof href === 'string' && href.trim() !== '' && (href.trim().startsWith('http') || href.trim().startsWith('/') || href.trim().startsWith('https'));
 };
 
 /**
@@ -116,16 +116,19 @@ function callToOpenNewWindowBridgeByDom(event){
 
 /**
  * callToOpenNewWindowBridge 는 fnGoProductView와 같은 함수에서 브릿지 호출 위해 사용되는 함수
+ * 삽입되어야 하는 함수명들: chatBotTalk (window.open), talkChatAction, fnGoProductView, startKakaoTalkClick, submitLink
  * @param {string} url
- * @param {boolean} preventCallback 브릿지 호출 실패 시, document.location.href 이동을 막을지 여부
+ * @param {function} callback, 9.0.4 미만에서 브릿지 호출 안 할 때 callback 있으면 callback 호출하고 없으면 href 이동
  * @returns {boolean}
  */
-function callToOpenNewWindowBridge(url, preventCallback){
+function callToOpenNewWindowBridge(url, callback){
    const appVersion = getAppVersion(window.navigator.userAgent || '');
   const isSupportedVersion = isVersionAtLeast(appVersion, { major: 9, minor: 0, patch: 4 });
   if (!isSupportedVersion) {
     console.log('callToOpenNewWindowBridge : 앱 버전이 9.0.4 이상이 아닙니다. 브릿지 호출을 건너뜁니다.');
-    if(!preventCallback) {
+    if(typeof callback === 'function') {
+      callback();
+    } else {
       document.location.href = url;
     }
     return true;
