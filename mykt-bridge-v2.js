@@ -26,7 +26,7 @@ function myKTopenNewWindow(targetUrl){
 
   const payload = { url: encodeURIComponent(targetUrl) };
   const iosHandler = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.openNewWindow;
-  const androidBridge = window.ktcsNative;
+  const androidBridge = window.ktCsNative;
 
   if (iosHandler?.postMessage) {
     iosHandler.postMessage(payload);
@@ -107,7 +107,7 @@ function callToOpenNewWindowBridgeByDom(event){
   }
 
   let url = dom.getAttribute('href');
-  if(url.startsWith('/')) {
+  if(typeof url === 'string' && url.startsWith('/')) {
     url = window.location.origin + url;
   }
   myKTopenNewWindow(url);
@@ -135,6 +135,6 @@ function callToOpenNewWindowBridge(url, callback){
   }
 
   console.log('callToOpenNewWindowBridge : 앱 버전이 9.0.4 이상입니다. 브릿지 호출을 진행합니다.');
-  myKTopenNewWindow(url.startsWith('/') ? window.location.origin + url : url);
+  myKTopenNewWindow(typeof url === 'string' && url.startsWith('/') ? window.location.origin + url : url);
   return false;
 }
