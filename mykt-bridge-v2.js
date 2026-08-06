@@ -78,6 +78,34 @@ function isVersionAtLeast(currentVersion, minimumVersion){
 };
 
 /**
+ * closest 미지원 환경을 위한 fallback: parentElement를 순회하며 a 태그를 찾음. 못 찾으면 target 그대로 반환
+ * @param target 클릭된 DOM
+ * @returns {Element}
+ */
+function findAnchorElementByParent(target){
+  let node = target;
+  while (node && typeof node.tagName === 'string' && node.tagName.toUpperCase() !== 'A') {
+    node = node.parentElement;
+  }
+  return node || target;
+};
+
+/**
+ * target이 a의 하위 요소일 수 있으므로 몇 단계든 올라가 가장 가까운 a를 찾음
+ * @param target 클릭된 DOM
+ * @returns {Element}
+ */
+function findAnchorElement(target){
+  if (!target) {
+    return target;
+  }
+  if (typeof target.closest === 'function') {
+    return target.closest('a') || target;
+  }
+  return findAnchorElementByParent(target);
+};
+
+/**
  * a 태그 onclick 핸들러
  * - a 태그 + href 존재
  * - 앱 버전 9.0.4 이상
@@ -86,7 +114,8 @@ function isVersionAtLeast(currentVersion, minimumVersion){
  * @returns {boolean}
  */
 function callToOpenNewWindowBridgeByDom(event){
-  const dom = event && event.target;
+  const target = event && event.target;
+  const dom = findAnchorElement(target);
 
   if (!isAnchorElementWithHref(dom)) {
     console.log('callToOpenNewWindowBridgeByDom : 클릭된 요소가 a 태그가 아니거나 href가 없습니다. 브릿지 호출을 건너뜁니다.');
