@@ -91,12 +91,15 @@ function findAnchorElementByParent(target){
 };
 
 /**
- * target이 a의 하위 요소일 수 있으므로 몇 단계든 올라가 가장 가까운 a를 찾음
+ * target이 a의 하위 요소일 수 있으므로 자기 자신부터 확인 후 몇 단계든 올라가 가장 가까운 a를 찾음
  * @param target 클릭된 DOM
  * @returns {Element}
  */
 function findAnchorElement(target){
   if (!target) {
+    return target;
+  }
+  if (typeof target.tagName === 'string' && target.tagName.toUpperCase() === 'A') {
     return target;
   }
   if (typeof target.closest === 'function') {
